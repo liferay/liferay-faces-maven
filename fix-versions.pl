@@ -91,7 +91,7 @@ while(<POM>) {
 
 	}
 
-	if(/faces.spec.version>/) {
+	if(/^\t\t<faces.spec.version>/) {
 
 		/version>(.*)</;
 		$facesVersion = $1;
@@ -249,7 +249,7 @@ sub do_inplace_edits {
 		print "$File::Find::name\n";
 		`perl -pi -e 's/faces-config version=\"[0-9.]+\"/faces-config version=\"$facesVersion\"/' $file`;
 		`perl -pi -e 's/web-facesconfig[0-9_]+/web-facesconfig_$facesVersionURL/' $file`;
-		if ($facesMajor > 2 or ($facesMajor == 2 and $facesMinor > 1)) {
+		if ($facesMajor == 2 and $facesMinor > 1) {
 			`perl -pi -e 's/java.sun.com/xmlns.jcp.org/g' $file`;
 		} else {
 			`perl -pi -e 's/xmlns.jcp.org/java.sun.com/g' $file`;
