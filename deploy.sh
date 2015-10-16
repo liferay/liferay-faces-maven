@@ -107,21 +107,6 @@ until [ -z $1 ] ; do
 		SERVER_PROFILE_NAME=$1
 	elif [ "$1" = "websphere" ] ; then
 		SERVER_PROFILE_NAME=$1
-	elif [ "$1" = "rebuild-alloy" ] ; then
-		REBUILD_ALLOY="true"
-	elif [ "$1" = "rebuild-bridge" ] ; then
-		REBUILD_BRIDGE="true"
-	elif [ "$1" = "rebuild-portal" ] ; then
-		REBUILD_PORTAL="true"
-	elif [ "$1" = "rebuild-util" ] ; then
-		REBUILD_UTIL="true"
-	elif [ "$1" = "rebuild-showcase" ] ; then
-		REBUILD_SHOWCASE="true"
-	elif [ "$1" = "rebuild" ] ; then
-		REBUILD_ALLOY="true"
-		REBUILD_BRIDGE="true"
-		REBUILD_PORTAL="true"
-		REBUILD_UTIL="true"
 	else
 		if [ -z $EXTRA_PROFILE_NAMES ] ; then
 			EXTRA_PROFILE_NAMES="$1"
@@ -144,58 +129,11 @@ if [ "$PORTAL_PROFILE_NAME" = "liferay" ] ; then
 fi
 echo "==============================================================================================================="
 echo "[INFO: deploy.sh] FACES_IMPL=$FACES_IMPL"
-echo "[INFO: deploy.sh] REBUILD_ALLOY=$REBUILD_ALLOY"
-echo "[INFO: deploy.sh] REBUILD_BRIDGE=$REBUILD_BRIDGE"
-echo "[INFO: deploy.sh] REBUILD_PORTAL=$REBUILD_PORTAL"
-echo "[INFO: deploy.sh] REBUILD_UTIL=$REBUILD_UTIL"
 echo "[INFO: deploy.sh] PORTAL_PROFILE_NAME=$PORTAL_PROFILE_NAME"
 echo "[INFO: deploy.sh] SERVER_PROFILE_NAME=$SERVER_PROFILE_NAME"
 echo "[INFO: deploy.sh] EXTRA_PROFILE_NAMES=$EXTRA_PROFILE_NAMES"
 echo "[INFO: deploy.sh] PORTLET_MVN_CMD=$PORTLET_MVN_CMD"
 echo "==============================================================================================================="
 echo " "
-
-if [ "$REBUILD_UTIL" = "true" ] ; then
-	if [ -z $EXTRA_PROFILE_NAMES ] ; then
-		pushd $LIFERAY_FACES_DIR/util; mvn clean install; popd
-	else
-		pushd $LIFERAY_FACES_DIR/util; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-	fi
-fi
-
-if [ "$REBUILD_BRIDGE" = "true" ] ; then
-	if [ -z $EXTRA_PROFILE_NAMES ] ; then
-		pushd $LIFERAY_FACES_DIR/bridge-api; mvn clean install; popd
-		pushd $LIFERAY_FACES_DIR/bridge-impl; mvn clean install; popd
-	else
-		pushd $LIFERAY_FACES_DIR/bridge-api; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-		pushd $LIFERAY_FACES_DIR/bridge-impl; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-	fi
-fi
-if [ "$REBUILD_ALLOY" = "true" ] ; then
-	if [ -z $EXTRA_PROFILE_NAMES ] ; then
-		pushd $LIFERAY_FACES_DIR/alloy; mvn clean install; popd
-	else
-		pushd $LIFERAY_FACES_DIR/alloy; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-	fi
-fi
-
-if [ "$REBUILD_PORTAL" = "true" ] ; then
-	if [ -z $EXTRA_PROFILE_NAMES ] ; then
-		pushd $LIFERAY_FACES_DIR/portal; mvn clean install; popd
-	else
-		pushd $LIFERAY_FACES_DIR/portal; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-	fi
-fi
-
-if [ "$REBUILD_SHOWCASE" = "true" ] ; then
-	if [ -z $EXTRA_PROFILE_NAMES ] ; then
-		pushd $LIFERAY_FACES_DIR/demos/showcase/showcase-common; mvn clean install; popd
-		pushd $LIFERAY_FACES_DIR/demos/showcase/showcase-webapp; mvn clean install; popd
-	else
-		pushd $LIFERAY_FACES_DIR/demos/showcase/showcase-common; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-		pushd $LIFERAY_FACES_DIR/demos/showcase/showcase-webapp; mvn -P $EXTRA_PROFILE_NAMES clean install; popd
-	fi
-fi
 
 $PORTLET_MVN_CMD
