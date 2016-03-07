@@ -68,7 +68,14 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 		if (warFile.exists()) {
 			getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir.getAbsolutePath());
 
-			CopyTask.copyFile(warFile, autoDeployDir, warFileName, null, true, true);
+			String destinationFileName = warFileName;
+			int pos = destinationFileName.indexOf("-SNAPSHOT");
+
+			if (pos > 0) {
+				destinationFileName = destinationFileName.substring(0, pos) + destinationFileName.substring(pos + 9);
+			}
+
+			CopyTask.copyFile(warFile, autoDeployDir, destinationFileName, null, true, true);
 		}
 		else {
 			getLog().warn(warFileName + " does not exist");
