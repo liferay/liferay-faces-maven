@@ -66,15 +66,13 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 		}
 
 		if (warFile.exists()) {
-			getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir.getAbsolutePath());
 
 			String destinationFileName = warFileName;
-			int pos = destinationFileName.indexOf("-SNAPSHOT");
-
-			if (pos > 0) {
-				destinationFileName = destinationFileName.substring(0, pos) + destinationFileName.substring(pos + 9);
-			}
-
+			destinationFileName = destinationFileName.replaceFirst("-SNAPSHOT", "");
+			destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).war$", ".war");
+			destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).jar$", ".jar");
+			getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir.getAbsolutePath() + "/" +
+				destinationFileName);
 			CopyTask.copyFile(warFile, autoDeployDir, destinationFileName, null, true, true);
 		}
 		else {
