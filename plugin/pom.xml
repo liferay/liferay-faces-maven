@@ -8,8 +8,8 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.liferay.faces.maven</groupId>
-	<artifactId>liferay-faces-maven-plugin</artifactId>
+	<groupId>com.liferay.faces</groupId>
+	<artifactId>com.liferay.faces.maven.plugin</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Liferay Faces Maven Plugin</name>
 	<description>Liferay Faces Maven Plugin</description>
