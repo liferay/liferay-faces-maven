@@ -48,7 +48,7 @@ my $year= strftime "%Y", localtime;
 open POM, "pom.xml" or die "cannot open pom.xml: $!\n";
 while(<POM>) {
 
-	if (/artifactId>liferay-faces-.*-parent</) {
+	if (/artifactId>com.liferay.faces..*.parent</) {
 
 		$_ = <POM>;
 		/<version>(.*)</;
@@ -225,9 +225,10 @@ sub do_inplace_edits {
 	# Otherwise, if the current file is named "liferay-plugin-package.properties" then potentially fix
 	# the version wildcard that indicates compatible versions of Liferay Portal.
 	#
-	elsif ($file eq "liferay-plugin-package.properties" and ($File::Find::name =~ /demos\/.*\/src/)) {
+	elsif ($file eq "liferay-plugin-package.properties" and ($File::Find::name =~ /\/src/)) {
 		print "$File::Find::name\n";
 		`perl -pi -e 's/liferay-versions=..*/liferay-versions=$portalVersions/' $file`;
+		`perl -pi -e 's/Bundle-Version:..*/Bundle-Version: $liferayFacesVersionWithoutSnapshot/' $file`;
 	}
 
 	#
