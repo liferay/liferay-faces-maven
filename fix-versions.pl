@@ -38,7 +38,7 @@ use POSIX qw(strftime);
 #
 my($liferayFacesVersion,$liferayFacesVersionShort,$liferayFacesVersionShortMajor1DotMajor2,$major1,$major2,$minor);
 my($portalVersion,$portalVersions,$portalDtdDisplay,$portalDtdUrl,$liferayFacesVersionWithoutSnapshot);
-my($facesVersion,$facesVersionURL,$facesMajor,$facesMinor,$servletApi,$servletApiURL,$servletApiMajor1DotMajor2);
+my($facesVersion,$facesVersionURL,$facesMajor,$facesMinor,$portletApi,$portletApiURL,$portletApiMajor,$portletApiMajorDotMinor,$servletApi,$servletApiURL,$servletApiMajor1DotMajor2);
 my($liferayFacesMajor1,$liferayFacesMajor2,$liferayFacesMinor,);
 my $year= strftime "%Y", localtime;
 
@@ -104,6 +104,28 @@ while(<POM>) {
 		$facesVersionURL = "${facesMajor}_${facesMinor}";
 		print "facesVersionURL = $facesVersionURL\n";
 
+	}
+
+	if(/portlet-api<\/artifactId>/) {
+
+			$_ = <POM>;
+			if (/version>(.*)</) {
+			$portletApi = $1;
+			print "portletApi = $portletApi\n";
+
+			$_ = $portletApi;
+			($major1,$minor) = split /\./;
+			$_ = $minor;
+			($minor) = split /\-/;
+
+			$portletApiURL = "${major1}_${minor}";
+			print "portletApiURL = $portletApiURL\n";
+
+			$portletApiMajor = "${major1}";
+
+			$portletApiMajorDotMinor = "${major1}.${minor}";
+			print "portletApiMajorDotMinor = $portletApiMajorDotMinor\n";
+		}
 	}
 
 	if(/servlet-api<\/artifactId>/) {
@@ -188,6 +210,20 @@ sub do_inplace_edits {
 			close IN;
 			close OUT;
 			rename("web.xml.tmp", $file);
+		}
+	}
+
+	#
+	# Otherwise, if the current file is named "portlet.xml" then potentially fix the version
+	# numbers specified in DOCTYPE line for the DTD.
+	#
+	elsif ($file eq "portlet.xml" and ($File::Find::name =~ /\/src/)) {
+		print "$File::Find::name\n";
+		if ($portletApiMajor == 3) {
+			`perl -pi -e 's/portlet.portlet-app_2_0.xsd\" version=\"2.0\"/portlet\" version=\"$portletApiMajorDotMinor\"/' $file`;
+			`perl -pi -e 's/.portlet-app_2_0.xsd http/ http/' $file`;
+			`perl -pi -e 's/portlet-app_2_0/portlet-app_$portletApiURL/' $file`;
+			`perl -pi -e 's/java.sun.com/xmlns.jcp.org/g' $file`;
 		}
 	}
 
