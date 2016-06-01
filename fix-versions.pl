@@ -38,7 +38,7 @@ use POSIX qw(strftime);
 #
 my($liferayFacesVersion,$liferayFacesVersionShort,$liferayFacesVersionShortMajor1DotMajor2,$major1,$major2,$minor);
 my($portalVersion,$portalVersions,$portalDtdDisplay,$portalDtdUrl,$liferayFacesVersionWithoutSnapshot);
-my($facesVersion,$facesVersionURL,$facesMajor,$facesMinor,$portletApi,$portletApiURL,$portletApiMajor,$portletApiMajorDotMinor,$servletApi,$servletApiURL,$servletApiMajor1DotMajor2);
+my($cdiVersion,$cdiVersionURL,$cdiMajor,$cdiMinor,$facesVersion,$facesVersionURL,$facesMajor,$facesMinor,$portletApi,$portletApiURL,$portletApiMajor,$portletApiMajorDotMinor,$servletApi,$servletApiURL,$servletApiMajor1DotMajor2);
 my($liferayFacesMajor1,$liferayFacesMajor2,$liferayFacesMinor,);
 my $year= strftime "%Y", localtime;
 
@@ -88,6 +88,21 @@ while(<POM>) {
 
 		$portalDtdUrl = "${major1}_${major2}_0";
 		print "portalDtdUrl = $portalDtdUrl\n";
+
+	}
+
+	if(/^\t\t<cdi.version>/) {
+
+		/version>(.*)</;
+		$cdiVersion = $1;
+		print "cdiVersion = $cdiVersion\n";
+
+		$_ = $cdiVersion;
+
+		($cdiMajor,$cdiMinor) = split /[._]/;
+
+		$cdiVersionURL = "${cdiMajor}_${cdiMinor}";
+		print "cdiVersionURL = $cdiVersionURL\n";
 
 	}
 
@@ -284,6 +299,23 @@ sub do_inplace_edits {
 		print "$File::Find::name\n";
 		`perl -pi -e 's/DTD Friendly URL Routes [0-9][.][0-9][.][0-9]/DTD Friendly URL Routes $portalDtdDisplay/' $file`;
 		`perl -pi -e 's/liferay-friendly-url-routes_[0-9]_[0-9]_[0-9][.]dtd/liferay-friendly-url-routes_$portalDtdUrl.dtd/' $file`;
+	}
+
+	#
+	# Otherwise, if the current file is named "beans.xml" then potentially fix the version number that
+	# will appear in the version attribute and the version number that will appear in the xsi:schemaLocation
+	# attribute URL of the beans tag.
+	#
+	elsif (($file eq "beans.xml") and ($File::Find::name =~ /\/src/)) {
+		print "$File::Find::name\n";
+		# `perl -pi -e 's/beans version=\"[0-9.]+\"/beans version=\"$cdiVersion\"/' $file`;
+		`perl -pi -e 's/beans[0-9_]+/beans_$cdiVersionURL/' $file`;
+		if ($cdiMajor == 1 and $cdiMinor > 0) {
+			`perl -pi -e 's/java.sun.com/xmlns.jcp.org/g' $file`;
+		} else {
+			`perl -pi -e 's/xmlns.jcp.org/java.sun.com/g' $file`;
+		}
+		`perl -pi -e 's/xmlns.jcp.org\\/xml\\/ns\\/javaee[ "]\$/xmlns.jcp.org\\/xml\\/ns\\/javaee" bean-discovery-mode="all" version=\"$cdiVersion\"/g' $file`;
 	}
 
 	#
