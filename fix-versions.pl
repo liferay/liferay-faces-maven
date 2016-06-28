@@ -110,15 +110,16 @@ while(<POM>) {
 
 		/version>(.*)</;
 		$facesVersion = $1;
-		print "facesVersion = $facesVersion\n";
-
 		$_ = $facesVersion;
 
-		($facesMajor,$facesMinor) = split /[._]/;
+		($facesMajor,$facesMinor) = split /[._-]/;
 
+		$facesVersion = "${facesMajor}.${facesMinor}";
 		$facesVersionURL = "${facesMajor}_${facesMinor}";
+		print "facesVersion = $facesVersion\n";
 		print "facesVersionURL = $facesVersionURL\n";
-
+		print "facesMajor = $facesMajor\n";
+		print "facesMinor = $facesMinor\n";
 	}
 
 	if(/portlet-api<\/artifactId>/) {
