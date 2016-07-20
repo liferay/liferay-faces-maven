@@ -356,6 +356,14 @@ sub do_inplace_edits {
 	}
 
 	#
+	# Otherwise, if the current file is named with .tld extension, then
+	#
+	elsif (($file =~ m/.*\.tld/) and ($File::Find::name =~ /\/src/)) {
+		print "$File::Find::name\n";
+		`perl -pi -e 's/tlib-version>[0-9]\\.[0-9]\\.[0-9]/tlib-version>$liferayFacesVersionShort/' $file`;
+	}
+
+	#
 	# Otherwise, if the current file is named with .xhtml extension, then
 	#
 	elsif (($file =~ m/.*\.xhtml/) and ($File::Find::name =~ /\/src/)) {
