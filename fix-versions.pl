@@ -110,7 +110,7 @@ while(<POM>) {
 
 		$_ = $cdiVersion;
 
-		($cdiMajor,$cdiMinor) = split /[._]/;
+		($cdiMajor,$cdiMinor) = split /[._-]/;
 
 		$cdiVersionURL = "${cdiMajor}_${cdiMinor}";
 		print "cdiVersionURL = $cdiVersionURL\n";
