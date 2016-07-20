@@ -336,12 +336,10 @@ sub do_inplace_edits {
 	}
 
 	#
-	# Otherwise, if the current file is named with .taglib.xml extension, then potentially fix the version number that will
-	# appear in the vdldoc:since element.
+	# Otherwise, if the current file is named with .taglib.xml extension, then
 	#
 	elsif (($file =~ m/.*\.taglib\.xml/) and ($File::Find::name =~ /\/src/)) {
 		print "$File::Find::name\n";
-		`perl -pi -e 's/vdldoc:since>[0-9]\\.[0-9]/vdldoc:since>$liferayFacesVersionShortMajor1DotMajor2/' $file`;
 
 		# If the JSF version is 2.1, the Facelet Taglib version is 2.0. See
 		# https://issues.liferay.com/browse/FACES-2109#commentauthor_590915_verbose for more details.
@@ -358,8 +356,7 @@ sub do_inplace_edits {
 	}
 
 	#
-	# Otherwise, if the current file is named with .xhtml extension, then potentially fix the version number that will
-	# appear in the vdldoc:since element.
+	# Otherwise, if the current file is named with .xhtml extension, then
 	#
 	elsif (($file =~ m/.*\.xhtml/) and ($File::Find::name =~ /\/src/)) {
 		print "$File::Find::name\n";
