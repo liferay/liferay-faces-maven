@@ -37,7 +37,7 @@ use POSIX qw(strftime);
 # Primitives
 #
 my($liferayFacesVersion,$liferayFacesVersionShort,$liferayFacesVersionShortMajor1DotMajor2,$major1,$major2,$minor);
-my($portalVersion,$portalVersions,$portalDtdDisplay,$portalDtdUrl,$liferayFacesVersionWithoutSnapshot);
+my($portalVersion,$portalVersionDTD,$portalVersions,$portalDtdDisplay,$portalDtdUrl,$liferayFacesVersionWithoutSnapshot);
 my($cdiVersion,$cdiVersionURL,$cdiMajor,$cdiMinor,$facesVersion,$facesVersionURL,$facesMajor,$facesMinor,$portletApi,$portletApiURL,$portletApiMajor,$portletApiMajorDotMinor,$servletApi,$servletApiURL,$servletApiMajor1DotMajor2);
 my($liferayFacesMajor1,$liferayFacesMajor2,$liferayFacesMinor,);
 my $year= strftime "%Y", localtime;
@@ -82,6 +82,17 @@ while(<POM>) {
 		($major1,$major2,$minor) = split /\./;
 		$portalVersions = "${major1}.${major2}.*";
 		print "portalVersions = $portalVersions\n";
+	}
+
+	if (/^\t\t<liferay.version.dtd>/) {
+
+		/version.dtd>(.*)</;
+		$portalVersionDTD = $1;
+		print "portalVersionDTD = $portalVersionDTD\n";
+
+		$_ = $portalVersionDTD;
+
+		($major1,$major2,$minor) = split /\./;
 
 		$portalDtdDisplay = "${major1}.${major2}.0";
 		print "portalDtdDisplay = $portalDtdDisplay\n";
