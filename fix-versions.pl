@@ -189,7 +189,7 @@ sub do_inplace_edits {
 	# If the current file is named "pom.xml" and is not the parent-most POM, then potentially fix the
 	# version number specified in the <parent><version>...</version></parent> section.
 	#
-	if ($file eq "pom.xml" and $File::Find::name ne "./pom.xml" and $File::Find::name !~ /\/target/) {
+	if ($file eq "pom.xml" and $File::Find::name ne "./pom.xml" and $File::Find::name !~ /\/target/ and $File::Find::name !~ /\/archetype/) {
 		print "$File::Find::name\n";
 
 		my $inParent = 0;
@@ -297,7 +297,7 @@ sub do_inplace_edits {
 	# Otherwise, if the current file is named "liferay-plugin-package.properties" then potentially fix
 	# the version wildcard that indicates compatible versions of Liferay Portal as well as the Bundle-Version.
 	#
-	elsif ($file eq "liferay-plugin-package.properties" and ($File::Find::name =~ /\/src/)) {
+	elsif ($file eq "liferay-plugin-package.properties" and ($File::Find::name =~ /\/src/) and ($File::Find::name !~ /\/archetype/)) {
 		print "$File::Find::name\n";
 		`perl -pi -e 's/liferay-versions=..*/liferay-versions=$portalVersions/' $file`;
 		`perl -pi -e 's/Bundle-Version:..*/Bundle-Version: $liferayFacesVersionWithoutSnapshot/' $file`;
