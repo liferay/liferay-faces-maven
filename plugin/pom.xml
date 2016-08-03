@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.liferay.faces</groupId>
 	<artifactId>com.liferay.faces.maven.plugin</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>Liferay Faces Maven Plugin</name>
 	<description>Liferay Faces Maven Plugin</description>
 	<packaging>maven-plugin</packaging>
@@ -71,7 +71,7 @@
 		<connection>scm:git:https://github.com/liferay/liferay-faces-maven</connection>
 		<developerConnection>scm:git:https://github.com/liferay/liferay-faces-maven</developerConnection>
 		<url>scm:git:https://github.com/liferay/liferay-faces-maven</url>
-		<tag>HEAD</tag>
+		<tag>0.1.0</tag>
 	</scm>
 
 	<properties>
