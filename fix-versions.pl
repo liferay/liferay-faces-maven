@@ -112,7 +112,13 @@ while(<POM>) {
 
 		($cdiMajor,$cdiMinor) = split /[._-]/;
 
-		$cdiVersionURL = "${cdiMajor}_${cdiMinor}";
+		if ($cdiMajor == 1 and $cdiMinor == 2) {
+			# CDI 1.2 relies on beans_1_1.xsd and never released beans_1_2.xsd
+			$cdiVersionURL = "1_1";
+		}
+		else {
+			$cdiVersionURL = "${cdiMajor}_${cdiMinor}";
+		}
 		print "cdiVersionURL = $cdiVersionURL\n";
 
 	}
