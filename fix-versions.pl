@@ -423,8 +423,7 @@ sub do_inplace_edits {
 	}
 
 	#
-	# Otherwise, if the current file is named generator.properties, then potentially fix the copyright year and the
-	# current version.
+	# Otherwise, if the current file is named with .md extension, then fix the version (if already present).
 	#
 	elsif (($file =~ m/.*\.md/) and ($File::Find::name =~ /\/src/)) {
 		print "$File::Find::name\n";
