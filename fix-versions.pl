@@ -70,6 +70,10 @@ while(<POM>) {
 		print "liferayFacesVersionShortMajor1DotMajor2 = $liferayFacesVersionShortMajor1DotMajor2\n";
 
 	}
+	elsif ((/^\t\<version>/) and (!defined $liferayFacesVersion)) {
+			/<version>(.*)</;
+			$liferayFacesVersion = $1;
+	}
 
 	if (/^\t\t<liferay.version>/) {
 
@@ -416,5 +420,14 @@ sub do_inplace_edits {
 	elsif ($file eq "generator.properties") {
 		print "$File::Find::name\n";
 		`perl -pi -e 's/builder[.]copyright[.]year=[0-9]+/builder.copyright.year=${year}/' $file`;
+	}
+
+	#
+	# Otherwise, if the current file is named generator.properties, then potentially fix the copyright year and the
+	# current version.
+	#
+	elsif (($file =~ m/.*\.md/) and ($File::Find::name =~ /\/src/)) {
+		print "$File::Find::name\n";
+		`perl -pi -e 's/^_Version:.*/_Version: ${liferayFacesVersion}_/' $file`;
 	}
 }
