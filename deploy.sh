@@ -138,7 +138,7 @@ if [ -e src/main/webapp/WEB-INF/portlet.xml ] ; then
 	touch target/$PORTAL_PROFILE_NAME-portlet-war-redeploy-activation.tmp
 	touch target/$PORTAL_PROFILE_NAME-portlet-war-activation.tmp
 fi
-PORTLET_MVN_CMD="mvn -P $PORTAL_PROFILE_NAME,$FACES_IMPL,$SERVER_PROFILE_NAME,redeploy,$EXTRA_PROFILE_NAMES -Djava.awt.headless=true help:active-profiles clean install"
+PORTLET_MVN_CMD="mvn -P $PORTAL_PROFILE_NAME,$FACES_IMPL,$SERVER_PROFILE_NAME,redeploy,$EXTRA_PROFILE_NAMES -Djava.awt.headless=true help:active-profiles clean package"
 if [ "$PORTAL_PROFILE_NAME" = "liferay" ] ; then
 	PORTLET_MVN_CMD="$PORTLET_MVN_CMD liferay-faces:deploy"
 fi
