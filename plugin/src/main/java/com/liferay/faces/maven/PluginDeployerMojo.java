@@ -30,31 +30,31 @@ import org.apache.maven.project.MavenProject;
 public class PluginDeployerMojo extends AbstractLiferayMojo {
 
 	/**
-	 * @parameter  liferayVersion="liferayVersion"
+	 * @parameter  expression="${liferayVersion}"
 	 */
 	protected String liferayVersion;
 
 	/**
-	 * @parameter  project="project"
+	 * @parameter  expression="${project}"
 	 * @required
 	 * @readonly
 	 */
 	protected MavenProject project;
 
 	/**
-	 * @parameter  autoDeployDir="autoDeployDir"
+	 * @parameter  expression="${autoDeployDir}"
 	 * @required
 	 */
 	private File autoDeployDir;
 
 	/**
-	 * @parameter  default-value="${project.build.directory}/${project.build.finalName}.war" warFile="warFile"
+	 * @parameter  default-value="${project.build.directory}/${project.build.finalName}.war" expression="${warFile}"
 	 * @required
 	 */
 	private File warFile;
 
 	/**
-	 * @parameter  default-value="${project.build.finalName}.war" warFileName="warFileName"
+	 * @parameter  default-value="${project.build.finalName}.war" expression="${warFileName}"
 	 * @required
 	 */
 	private String warFileName;
