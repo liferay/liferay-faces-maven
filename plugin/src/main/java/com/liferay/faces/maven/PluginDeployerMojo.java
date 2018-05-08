@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2017 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2018 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,6 +14,7 @@
 package com.liferay.faces.maven;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -65,6 +66,10 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 			return;
 		}
 
+		if (skipDeploy()) {
+			return;
+		}
+
 		if (warFile.exists()) {
 
 			String destinationFileName = warFileName;
@@ -93,4 +98,17 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 		return true;
 	}
 
+	protected boolean skipDeploy() {
+
+		Properties properties = project.getProperties();
+		String mavenSkipDeployProperty = properties.getProperty("maven.deploy.skip");
+
+		if ("true".equalsIgnoreCase(mavenSkipDeployProperty)) {
+			getLog().info("Skipping " + project.getArtifactId() + " since maven.deploy.skip=true");
+
+			return true;
+		}
+
+		return false;
+	}
 }
