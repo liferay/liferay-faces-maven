@@ -21,14 +21,20 @@ import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+import org.apache.maven.plugins.shade.DefaultShader;
 import org.apache.maven.plugins.shade.relocation.Relocator;
 import org.apache.maven.plugins.shade.resource.ManifestResourceTransformer;
 
 
 /**
+ * This class allows the BND generated META-INF/MANIFEST.MF to be used by the uber JAR. This class extends from {@link
+ * ManifestResourceTransformer} because it is consulted first by the {@link DefaultShader} in the Maven Shade Plugin so
+ * that the MANIFEST.MF is the first entry in the generated JAR.
+ *
+ * @see     org.apache.maven.plugins.shade.DefaultShader
  * @author  Kyle Stiemann
  */
-public class BNDManifestTransformerImpl extends ManifestResourceTransformer {
+public final class BNDManifestTransformerImpl extends ManifestResourceTransformer {
 
 	private String bndManifestLocation;
 	private boolean transformedManifest = false;
@@ -47,6 +53,7 @@ public class BNDManifestTransformerImpl extends ManifestResourceTransformer {
 	public void modifyOutputStream(JarOutputStream jos) throws IOException {
 
 		if (!transformedManifest) {
+
 			jos.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
 			Files.copy(new File(bndManifestLocation).toPath(), jos);
 			jos.closeEntry();

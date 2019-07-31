@@ -31,6 +31,9 @@ import org.apache.maven.plugins.shade.resource.ResourceTransformer;
 
 
 /**
+ * This class prefixes faces-config.xml and web-fragment.xml files with unique generated names so they are not
+ * overwritten and can coexist in the uber JAR.
+ *
  * @author  Kyle Stiemann
  */
 public class ConfigTransformerImpl implements ResourceTransformer {
