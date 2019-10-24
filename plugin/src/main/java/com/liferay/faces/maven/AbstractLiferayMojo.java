@@ -34,16 +34,4 @@ public abstract class AbstractLiferayMojo extends AbstractMojo {
 	 */
 	protected MavenProject project;
 
-	protected boolean isLiferayProject() {
-		String packaging = project.getPackaging();
-
-		if (packaging.equals("pom")) {
-			getLog().info("Skipping " + project.getArtifactId());
-
-			return false;
-		}
-
-		return true;
-	}
-
 }

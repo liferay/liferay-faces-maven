@@ -14,6 +14,7 @@
 package com.liferay.faces.maven;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -49,6 +50,18 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 	private File autoDeployDir;
 
 	/**
+	 * @parameter  expression="${configsDeployDir}"
+	 * @required
+	 */
+	private File configsDeployDir;
+
+	/**
+	 * @parameter  default-value="${project.basedir}/src/main/resources/configs" expression="${configsDir}"
+	 * @required
+	 */
+	private File configsDir;
+
+	/**
 	 * @parameter  default-value="${project.build.directory}/${project.build.finalName}.war" expression="${warFile}"
 	 * @required
 	 */
@@ -62,40 +75,42 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 
 	public void execute() throws MojoExecutionException {
 
-		if (!isLiferayProject()) {
-			return;
-		}
-
-		if (skipDeploy()) {
-			return;
-		}
-
-		if (warFile.exists()) {
-
-			String destinationFileName = warFileName;
-			destinationFileName = destinationFileName.replaceFirst("-SNAPSHOT", "");
-			destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).war$", ".war");
-			destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).jar$", ".jar");
-			getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir.getAbsolutePath() + "/" +
-				destinationFileName);
-			CopyTask.copyFile(warFile, autoDeployDir, destinationFileName, null, true, true);
-		}
-		else {
-			getLog().warn(warFileName + " does not exist");
-		}
-	}
-
-	@Override
-	protected boolean isLiferayProject() {
 		String packaging = project.getPackaging();
 
 		if (packaging.equals("pom")) {
-			getLog().info("Skipping " + project.getArtifactId());
 
-			return false;
+			if (configsDir.exists()) {
+				File[] configFiles = configsDir.listFiles(new FileFilter() {
+					@Override
+					public boolean accept(File pathname) {
+						return (pathname != null) && pathname.isFile() && pathname.getName().endsWith(".config");
+					}
+				});
+				for (File configFile : configFiles) {
+					String configFileName = configFile.getName();
+					getLog().info("FAST Deploying " + configFileName + " to " + configsDeployDir);
+					CopyTask.copyFile(configFile, configsDeployDir, configFileName, null, true, true);
+				}
+			}
 		}
+		else {
 
-		return true;
+			if (skipDeploy()) {
+				return;
+			}
+
+			if (warFile.exists()) {
+
+				String destinationFileName = warFileName;
+				destinationFileName = destinationFileName.replaceFirst("-SNAPSHOT", "");
+				destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).war$", ".war");
+				destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).jar$", ".jar");
+				getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir);
+				CopyTask.copyFile(warFile, autoDeployDir, destinationFileName, null, true, true);
+			} else {
+				getLog().warn(warFileName + " does not exist");
+			}
+		}
 	}
 
 	protected boolean skipDeploy() {
