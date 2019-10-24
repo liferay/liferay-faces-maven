@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2018 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2019 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -81,11 +81,13 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 
 			if (configsDir.exists()) {
 				File[] configFiles = configsDir.listFiles(new FileFilter() {
-					@Override
-					public boolean accept(File pathname) {
-						return (pathname != null) && pathname.isFile() && pathname.getName().endsWith(".config");
-					}
-				});
+							@Override
+							public boolean accept(File pathname) {
+								return (pathname != null) && pathname.isFile() &&
+									pathname.getName().endsWith(".config");
+							}
+						});
+
 				for (File configFile : configFiles) {
 					String configFileName = configFile.getName();
 					getLog().info("FAST Deploying " + configFileName + " to " + configsDeployDir);
@@ -107,7 +109,8 @@ public class PluginDeployerMojo extends AbstractLiferayMojo {
 				destinationFileName = destinationFileName.replaceFirst("-(\\d+\\.)*(\\d+).jar$", ".jar");
 				getLog().info("FAST Deploying " + warFileName + " to " + autoDeployDir);
 				CopyTask.copyFile(warFile, autoDeployDir, destinationFileName, null, true, true);
-			} else {
+			}
+			else {
 				getLog().warn(warFileName + " does not exist");
 			}
 		}
